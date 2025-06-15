@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: encuestaapp-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/nimbusops1/encuestaapp-chart'
+    targetRevision: main
+    path: .
+    helm:
+      valueFiles:
+        - staging-values.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: ambiente-staging-encuestapp
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
