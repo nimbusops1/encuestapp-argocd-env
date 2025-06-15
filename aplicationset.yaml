@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: encuestaapp-environments
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+            valuesFile: dev-values.yaml
+          - env: staging
+            valuesFile: staging-values.yaml
+          - env: prod
+            valuesFile: prod-values.yaml
+  template:
+    metadata:
+      name: encuestaapp-{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/nimbusops1/encuestaapp-chart
+        targetRevision: main
+        path: .
+        helm:
+          valueFiles:
+            - '{{valuesFile}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: encuestaapp-{{env}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
