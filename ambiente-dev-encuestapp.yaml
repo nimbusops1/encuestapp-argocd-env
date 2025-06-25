@@ -1,23 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: encuestaapp-dev
-  namespace: argocd
+  name: encuestapp-dev-area
+  namespace: argocd
 spec:
-  project: default
-  source:
-    repoURL: 'https://github.com/nimbusops1/encuestaapp-chart'
-    targetRevision: main
-    path: .
-    helm:
-      valueFiles:
-        - dev-values.yaml
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: ambiente-dev-encuestapp
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://github.com/nimbusops1/encuestapp-k8s-infra.git
+    targetRevision: main      #rama principal donde estan los archivos
+    path: overlays/dev                  #es el directorio donde esta deployment.yaml en la carpeta k8s de github
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ambiente-dev-encuestapp #el nombre del namespace que va a crear dentro del cluster
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
