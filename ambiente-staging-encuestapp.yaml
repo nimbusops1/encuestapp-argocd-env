@@ -1,24 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: encuestaapp-staging
-  namespace: argocd
+  name: encuestapp-staging-area
+  namespace: argocd
 spec:
-  project: default
-  source:
-    repoURL: 'https://github.com/nimbusops1/encuestaapp-chart'
-    targetRevision: main
-    path: .
-    helm:
-      valueFiles:
-        - staging-values.yaml
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: ambiente-staging-encuestapp
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://github.com/nimbusops1/encuestapp-k8s-infra.git
+    targetRevision: main      #rama principal donde estan los archivos
+    path: overlays/stg                   #es el directorio donde esta deployment.yaml en la carpeta k8s de github
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ambiente-staging-encuestapp #el nombre del namespace que va a crear dentro del cluster
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
 
