@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: encuestapp-mern-nimbus
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/nimbusops1/encuestapp-mern-k8s.git
+    targetRevision: main      #rama principal donde estan los archivos
+    path: .                   #es el directorio donde esta deployment.yaml en la carpeta k8s de github
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ambiente-mern-nimbusops #el nombre del namespace que va a crear dentro del cluster
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
